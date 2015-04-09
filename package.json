@@ -12,6 +12,7 @@
     "express": "~4.12.2",
     "express.io": "^1.1.13",
     "jade": "~1.9.2",
+    "mongoose": "^4.0.1",
     "morgan": "~1.5.1",
     "passport": "^0.2.1",
     "serve-favicon": "~2.2.0"
