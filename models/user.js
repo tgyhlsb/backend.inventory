@@ -8,11 +8,6 @@ var crypto = require('crypto');
 
 var Schema = mongoose.Schema;
 var oAuthTypes = [
-  'github',
-  'twitter',
-  'facebook',
-  'google',
-  'linkedin'
 ];
 
 /**
@@ -27,11 +22,6 @@ var UserSchema = new Schema({
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
-  facebook: {},
-  twitter: {},
-  github: {},
-  google: {},
-  linkedin: {}
 });
 
 /**
