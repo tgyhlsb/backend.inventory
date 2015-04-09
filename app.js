@@ -44,6 +44,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Models must be required before routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
