@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development node ./bin/www",
-    "test": "NODE_PATH=./config:./app/controllers NODE_ENV=test ./node_modules/.bin/mocha --reporter spec --timeout 10000 test/test-*.js"
+    "start": "NODE_PATH=./config:./controllers NODE_ENV=development node ./bin/www",
+    "test": "NODE_PATH=./config:./controllers NODE_ENV=test ./node_modules/.bin/mocha --reporter spec --timeout 10000 test/test-*.js"
   },
   "dependencies": {
     "body-parser": "~1.12.0",
