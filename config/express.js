@@ -11,9 +11,8 @@ var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-var csrf = require('csurf');
+var csurf = require('csurf');
 var multer = require('multer');
-var swig = require('swig');
 
 var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
@@ -55,18 +54,6 @@ module.exports = function (app, passport) {
   // Don't log during tests
   // Logging middleware
   if (env !== 'test') app.use(morgan(log));
-
-  // Swig templating engine settings
-  if (env === 'development' || env === 'test') {
-    swig.setDefaults({
-      cache: false
-    });
-  }
-
-  // set views path, template engine and default layout
-  app.engine('html', swig.renderFile);
-  app.set('views', config.root + '/app/views');
-  app.set('view engine', 'html');
 
   // expose package.json to views
   app.use(function (req, res, next) {
@@ -113,7 +100,7 @@ module.exports = function (app, passport) {
 
   // adds CSRF support
   if (process.env.NODE_ENV !== 'test') {
-    app.use(csrf());
+    app.use(csurf());
 
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {

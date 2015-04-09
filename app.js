@@ -3,6 +3,7 @@ var express = require('express.io');
 var path = require('path');
 var mongoose = require('mongoose');
 var config = require('config');
+var passport = require('passport');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
