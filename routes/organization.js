@@ -9,6 +9,10 @@ router
   organizations.load,
   organizations.showOne
   )
+.post('/',
+  passport.authenticate('basic', { session: false }),
+  organizations.showOne
+  );
 
 
 
