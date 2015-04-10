@@ -22,6 +22,7 @@ var UserSchema = new Schema({
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
+  joinedAt  : { type : Date, default : Date.now }
 });
 
 /**
