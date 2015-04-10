@@ -36,7 +36,7 @@ OrganizationSchema.path('name').validate(function (name) {
 }, 'Name cannot be blank');
 
 OrganizationSchema.path('owner').validate(function (owner) {
-  return validatePresenceOf(name);
+  return validatePresenceOf(owner);
 }, 'Owner cannot be null');
 
 
