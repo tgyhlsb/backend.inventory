@@ -13,7 +13,7 @@ var Schema = mongoose.Schema;
  */
 
 var OrganizationSchema = new Schema({
-  name: { type: String, default: '' },
+  name: { type: String, default: 'New Organization' },
   owner: { type: Schema.ObjectId, ref: 'User' },
   createdAt  : { type : Date, default : Date.now }
 });
