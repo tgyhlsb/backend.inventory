@@ -1,0 +1,5 @@
+{
+  "execMap": {
+    "node": "npm start"
+  }
+}
