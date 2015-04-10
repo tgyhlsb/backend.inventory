@@ -5,11 +5,9 @@ GET     /users/:id
 POST    /users/:id
 DELETE  /users/:id
 
-GET     /organizations/
+GET     /organization/
+POST    /organization/
 POST    /organizations/
-GET     /organizations/:id
-POST    /organizations/:id
-DELETE  /organizations/:id
 
 GET     /entities/
 POST    /entities/
