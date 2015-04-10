@@ -48,9 +48,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Models must be required after models
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var organization = require('./routes/organization');
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/organization', organization);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
