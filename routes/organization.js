@@ -11,7 +11,7 @@ router
   )
 .post('/',
   passport.authenticate('basic', { session: false }),
-  organizations.showOne
+  organizations.create
   );
 
 
