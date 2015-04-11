@@ -16,7 +16,7 @@ module.exports = new BasicStrategy(
   function(email, password, done) {
     var options = {
       criteria: { email: email },
-      select: 'name username email hashed_password salt'
+      select: 'name username email hashed_password salt organization'
     };
     User.load(options, function (err, user) {
       if (err) return done(err)
