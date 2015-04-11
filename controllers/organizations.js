@@ -30,25 +30,22 @@ exports.load = function (req, res, next) {
  * Create organization
  */
 
-exports.create = function (req, res) {
+exports.create = function (req, res, next) {
   var organization = new Organization(req.body);
+
   organization.setOwner(req.user);
   organization.save(function (err) {
-    if (err) {
-      return err;
-    } else {
-      req.user.setOrganization(organization);
-      req.user.save(function (err) {
-        if (err) {
-          return err;
-        } else {
-          res.json({
-            organization: organization,
-            user: req.user
-          });
-        }
+    if (err) return next(err);
+
+    req.user.setOrganization(organization);
+    req.user.save(function (err) {
+      if (err) return next(err);
+      res.json({
+        organization: organization,
+        user: req.user
       });
-    }
+    });
+
   });
 };
 
