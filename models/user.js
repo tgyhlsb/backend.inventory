@@ -22,7 +22,8 @@ var UserSchema = new Schema({
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
-  joinedAt  : { type : Date, default : Date.now }
+  joinedAt  : { type : Date, default : Date.now },
+  organization: { type: Schema.ObjectId, ref: 'Organization' }
 });
 
 /**
@@ -150,6 +151,29 @@ UserSchema.methods = {
 
   skipValidation: function() {
     return ~oAuthTypes.indexOf(this.provider);
+  },
+
+  /**
+   * SetOrganization - set the organization
+   *
+   * @param {Organization} organization
+   * @api public
+   */
+
+  setOrganization: function (organization) {
+    this.organization = organization._id;
+  },
+
+  /**
+   * IsOrganization - Check if the organization is the user's organization
+   *
+   * @param {Organization} organization
+   * return {Boolean}
+   * @api public
+   */
+
+  isOrganization: function (organization) {
+    return (this.organization === organization._id);
   }
 };
 
