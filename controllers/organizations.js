@@ -5,6 +5,7 @@
 
 var mongoose = require('mongoose');
 var Organization = mongoose.model('Organization');
+var User = mongoose.model('User');
 var utils = require('../lib/utils');
 
 /**
@@ -31,12 +32,22 @@ exports.load = function (req, res, next) {
 
 exports.create = function (req, res) {
   var organization = new Organization(req.body);
-  organization.owner = req.user;
+  organization.setOwner(req.user);
   organization.save(function (err) {
     if (err) {
-      return res.status(400).json(err);
+      return err;
     } else {
-      return res.status(200).json(organization);
+      req.user.setOrganization(organization);
+      req.user.save(function (err) {
+        if (err) {
+          return err;
+        } else {
+          res.json({
+            organization: organization,
+            user: req.user
+          });
+        }
+      });
     }
   });
 };
