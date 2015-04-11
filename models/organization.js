@@ -49,8 +49,6 @@ OrganizationSchema.pre('save', function(next) {
 
   if (!validatePresenceOf(this.name)) {
     next(new Error('Invalid name'));
-  } else if (!validatePresenceOf(this.owner)) {
-    next(new Error('Invalid owner'));
   } else {
     next();
   }
