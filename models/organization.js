@@ -22,7 +22,6 @@ var OrganizationSchema = new Schema({
  * Virtuals
  */
 
-
 /**
  * Validations
  */
@@ -59,6 +58,29 @@ OrganizationSchema.pre('save', function(next) {
  */
 
 OrganizationSchema.methods = {
+
+  /**
+   * SetOwner - set the owner
+   *
+   * @param {UserSchema} owner
+   * @api public
+   */
+
+  setOwner: function (owner) {
+    this.owner = owner._id;
+  },
+
+  /**
+   * IsOwner - Check if the user is the organization's owner
+   *
+   * @param {UserSchema} user
+   * return {Boolean}
+   * @api public
+   */
+
+  isOwner: function (user) {
+    return (this.owner === user._id);
+  }
 };
 
 /**
