@@ -48,12 +48,12 @@ app.set('view engine', 'jade');
 
 // Models must be required after models
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var organization = require('./routes/organization');
+var usersRoutes = require('./routes/usersRoutes');
+var organizationRoutes = require('./routes/organizationRoutes');
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/organization', organization);
+app.use('/users', usersRoutes);
+app.use('/organization', organizationRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
