@@ -4,8 +4,11 @@
  */
 
 var mongoose = require('mongoose');
-var User = mongoose.model('User');
 var utils = require('../lib/utils');
+
+// Models
+var User = mongoose.model('User');
+var Organization = mongoose.model('Organization');
 
 /**
  * Load
@@ -44,6 +47,18 @@ exports.create = function (req, res) {
       if (err) req.flash('info', 'Sorry! We are not able to log you in!');
       return res.redirect('/');
     });
+  });
+};
+
+/**
+ *  Set organization with admin role
+ */
+
+exports.setAdminOf = function (organization, req, res, next) {
+  req.user.setOrganization(organization, Organization.roleAdmin);
+  req.user.save(function (err) {
+    if (err) return next(err);
+    return next(organization);
   });
 };
 

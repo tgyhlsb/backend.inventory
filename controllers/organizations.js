@@ -4,9 +4,11 @@
  */
 
 var mongoose = require('mongoose');
+var utils = require('../lib/utils');
+
+// Models
 var Organization = mongoose.model('Organization');
 var User = mongoose.model('User');
-var utils = require('../lib/utils');
 
 /**
  * Load
@@ -32,20 +34,15 @@ exports.load = function (req, res, next) {
 
 exports.create = function (req, res, next) {
   var organization = new Organization(req.body);
+  if (!organization) return next(new Error('Failed to create organization'));
+  return next(organization);
+};
 
+exports.setOwner = function (organization, req, res, next) {
   organization.setOwner(req.user);
   organization.save(function (err) {
     if (err) return next(err);
-
-    req.user.setOrganization(organization, Organization.roleAdmin);
-    req.user.save(function (err) {
-      if (err) return next(err);
-      res.json({
-        organization: organization,
-        user: req.user
-      });
-    });
-
+    return next(organization);
   });
 };
 
@@ -53,8 +50,7 @@ exports.create = function (req, res, next) {
  *  Show organization
  */
 
-exports.showOne = function (req, res) {
-  var organization = req.organization;
+exports.showOne = function (organization, req, res, next) {
   if (organization) {
     res.status(200).json(organization);
   } else {

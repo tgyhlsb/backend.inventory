@@ -7,8 +7,8 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 
 var Schema = mongoose.Schema;
-var oAuthTypes = [
-];
+
+var Organization = mongoose.model('Organization');
 
 /**
  * User Schema
@@ -53,18 +53,15 @@ var validatePresenceOf = function (value) {
 // the below 5 validations only apply if you are signing up traditionally
 
 UserSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
   return name.length;
 }, 'Name cannot be blank');
 
 UserSchema.path('email').validate(function (email) {
-  if (this.skipValidation()) return true;
   return email.length;
 }, 'Email cannot be blank');
 
 UserSchema.path('email').validate(function (email, fn) {
   var User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
 
   // Check only when it is a new user or when email field is modified
   if (this.isNew || this.isModified('email')) {
@@ -75,12 +72,10 @@ UserSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 UserSchema.path('username').validate(function (username) {
-  if (this.skipValidation()) return true;
   return username.length;
 }, 'Username cannot be blank');
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.skipValidation()) return true;
   return hashed_password.length;
 }, 'Password cannot be blank');
 
@@ -146,14 +141,6 @@ UserSchema.methods = {
     } catch (err) {
       return '';
     }
-  },
-
-  /**
-   * Validation is not required if using OAuth
-   */
-
-  skipValidation: function() {
-    return ~oAuthTypes.indexOf(this.provider);
   },
 
   /**
