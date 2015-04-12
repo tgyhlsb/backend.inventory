@@ -23,7 +23,10 @@ var UserSchema = new Schema({
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
   joinedAt  : { type : Date, default : Date.now },
-  organization: { type: Schema.ObjectId, ref: 'Organization' }
+  organization: {
+    id: { type: Schema.ObjectId, ref: 'Organization' },
+    role: { type: String, default: '' }
+  }
 });
 
 /**
@@ -160,8 +163,11 @@ UserSchema.methods = {
    * @api public
    */
 
-  setOrganization: function (organization) {
-    this.organization = organization._id;
+  setOrganization: function (organization, role) {
+    this.organization = {
+      id: organization._id,
+      role: role
+    };
   },
 
   /**
@@ -173,7 +179,7 @@ UserSchema.methods = {
    */
 
   isOrganization: function (organization) {
-    return (this.organization === organization._id);
+    return (this.organization.id === organization._id);
   }
 };
 

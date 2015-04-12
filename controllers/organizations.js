@@ -37,7 +37,7 @@ exports.create = function (req, res, next) {
   organization.save(function (err) {
     if (err) return next(err);
 
-    req.user.setOrganization(organization);
+    req.user.setOrganization(organization, Organization.roleAdmin);
     req.user.save(function (err) {
       if (err) return next(err);
       res.json({

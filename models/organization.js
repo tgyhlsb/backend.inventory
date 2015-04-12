@@ -89,6 +89,8 @@ OrganizationSchema.methods = {
 
 OrganizationSchema.statics = {
 
+  roleAdmin: 'admin',
+
   /**
    * Load
    *
