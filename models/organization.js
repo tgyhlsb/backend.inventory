@@ -100,7 +100,7 @@ OrganizationSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name';
+    options.select = options.select || 'name owner createdAt';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
