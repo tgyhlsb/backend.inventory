@@ -3,21 +3,21 @@ var router = express.Router();
 var passport = require('passport');
 
 // Controllers
-var organizations = require('organizations');
-var users = require('users');
+var organizationsCtrl = require('organizationsCtrl');
+var usersCtrl = require('usersCtrl');
 
 router
 .get('/',
   passport.authenticate('basic', { session: false }),
-  organizations.load,
-  organizations.showOne
+  organizationsCtrl.load,
+  organizationsCtrl.showOne
   )
 .post('/',
   passport.authenticate('basic', { session: false }),
-  organizations.create,
-  organizations.setOwner,
-  users.setAdminOf,
-  organizations.showOne
+  organizationsCtrl.create,
+  organizationsCtrl.setOwner,
+  usersCtrl.setAdminOf,
+  organizationsCtrl.showOne
   );
 
 
