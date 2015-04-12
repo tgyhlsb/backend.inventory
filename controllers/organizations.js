@@ -15,7 +15,7 @@ var User = mongoose.model('User');
  */
 
 exports.load = function (req, res, next) {
-  var organizationId = req.user.organization || req.params.organizationId;
+  var organizationId = req.user.organization.id || req.params.organizationId;
   if (!organizationId) return next(new Error('OrganizationId can\'t be null'));
   var options = {
     criteria: { _id : organizationId }
@@ -23,8 +23,7 @@ exports.load = function (req, res, next) {
   Organization.load(options, function (err, organization) {
     if (err) return next(err);
     if (!organization) return next(new Error('Failed to load Organization ' + organizationId));
-    req.organization = organization;
-    next();
+    next(organization);
   });
 };
 
@@ -51,8 +50,9 @@ exports.setOwner = function (organization, req, res, next) {
  */
 
 exports.showOne = function (organization, req, res, next) {
-  if (organization) {
-    res.status(200).json(organization);
+  var org = organization || req.organization;
+  if (org) {
+    res.status(200).json(org);
   } else {
     res.status(404).send('Organization not found');
   }
