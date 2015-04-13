@@ -11,11 +11,22 @@ var Organization = mongoose.model('Organization');
 var User = mongoose.model('User');
 
 /**
- * Load
+ * Select - select which organization to load (user's one or params)
+ */
+
+exports.select = function (req, res, next) {
+  var organizationId = req.params.organizationId || req.user.organization.id;
+  if (!organizationId) return next(new Error('OrganizationId can\'t be null'));
+  req.selectedOrganizationId = organizationId;
+  return next();
+};
+
+/**
+ * Load - load user's organization
  */
 
 exports.load = function (req, res, next) {
-  var organizationId = req.user.organization.id || req.params.organizationId;
+  var organizationId = req.selectedOrganizationId;
   if (!organizationId) return next(new Error('OrganizationId can\'t be null'));
   var options = {
     criteria: { _id : organizationId }
