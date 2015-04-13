@@ -54,11 +54,11 @@ exports.create = function (req, res) {
  *  Set organization with admin role
  */
 
-exports.setAdminOf = function (organization, req, res, next) {
-  req.user.setOrganization(organization, Organization.roleAdmin);
+exports.setAdminOf = function (req, res, next) {
+  req.user.setOrganization(req.organization, Organization.roleAdmin);
   req.user.save(function (err) {
     if (err) return next(err);
-    return next(organization);
+    return next();
   });
 };
 

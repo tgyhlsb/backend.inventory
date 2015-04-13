@@ -33,16 +33,21 @@ exports.load = function (req, res, next) {
  */
 
 exports.create = function (req, res, next) {
-  var organization = new Organization(req.body);
+  var data = req.body.organization || req.body;
+  var organization = new Organization(data);
   if (!organization) return next(new Error('Failed to create organization'));
   req.organization = organization;
   return next();
 };
 
+/**
+ * Set organization's owner
+ */
+
 exports.setOwner = function (req, res, next) {
   if (!req.organization) return next(new Error('Organization can\'t be null'));
-  organization.setOwner(req.user);
-  organization.save(function (err) {
+  req.organization.setOwner(req.user);
+  req.organization.save(function (err) {
     if (err) return next(err);
     return next();
   });
