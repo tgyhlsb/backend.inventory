@@ -189,6 +189,22 @@ UserSchema.statics = {
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+
+  /**
+   * Fetch
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  fetch: function (options, cb) {
+    options.select = options.select || 'name username createdAt';
+    options.criteria = options.criteria || {};
+    this.find(options.criteria)
+      .select(options.select)
+      .exec(cb);
   }
 }
 

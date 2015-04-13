@@ -14,10 +14,21 @@ router
   usersCtrl.fetch,
   usersCtrl.showAll
   )
+.get('/:userId',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.select,
+  usersCtrl.fetch,
+  usersCtrl.showOne
+  )
 .post('/',
   passport.authenticate('admin', { session: false }),
   usersCtrl.create,
   usersCtrl.showOne
+  )
+.post('/query/',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.fetch,
+  usersCtrl.showAll
   );
 
 

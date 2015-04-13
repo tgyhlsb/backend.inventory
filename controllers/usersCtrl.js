@@ -11,17 +11,26 @@ var User = mongoose.model('User');
 var Organization = mongoose.model('Organization');
 
 /**
- * Load
+ * Select - select which organization to load (user's one or params)
  */
 
-exports.load = function (req, res, next, id) {
-  var options = {
-    criteria: { _id : id }
+exports.select = function (req, res, next) {
+  req.body.criteria = {
+    _id: req.params.userId
   };
-  User.load(options, function (err, user) {
+  return next();
+};
+
+/**
+ * Fetch
+ */
+
+exports.fetch = function (req, res, next) {
+  var options = req.body;
+  User.fetch(options, function (err, users) {
     if (err) return next(err);
-    if (!user) return next(new Error('Failed to load User ' + id));
-    req.profile = user;
+    if (!users) return next(new Error('Failed to find users'));
+    req.profiles = users;
     next();
   });
 };
@@ -57,6 +66,16 @@ exports.setAdminOf = function (req, res, next) {
  */
 
 exports.showOne = function (req, res, next) {
-  if (!req.profile) return next(new Error('Profile can\'t be null'));
-  res.status(200).json(req.profile);
+  var profile = req.profile || req.profiles[0];
+  if (!profile) return next(new Error('Profile can\'t be null'));
+  res.status(200).json(profile);
+};
+
+/**
+ *  Show all profiles
+ */
+
+exports.showAll = function (req, res, next) {
+  if (!req.profiles) return next(new Error('Profile can\'t be null'));
+  res.status(200).json(req.profiles);
 };

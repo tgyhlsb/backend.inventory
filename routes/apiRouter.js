@@ -9,7 +9,6 @@ var usersCtrl = require('usersCtrl');
 router
 .get('/organization/',
   passport.authenticate('api', { session: false }),
-  organizationsCtrl.select,
   organizationsCtrl.load,
   organizationsCtrl.showOne
   )
