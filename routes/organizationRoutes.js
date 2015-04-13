@@ -12,6 +12,11 @@ router
   organizationsCtrl.load,
   organizationsCtrl.showOne
   )
+.get('/list/',
+  passport.authenticate('basic', { session: false }),
+  organizationsCtrl.fetch,
+  organizationsCtrl.showAll
+  )
 .post('/',
   passport.authenticate('basic', { session: false }),
   organizationsCtrl.create,

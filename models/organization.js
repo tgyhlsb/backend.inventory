@@ -104,6 +104,23 @@ OrganizationSchema.statics = {
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+
+  /**
+   * Fetch
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  fetch: function (options, cb) {
+    console.log('fetch ',options);
+    options.select = options.select || 'name owner createdAt';
+    options.criteria = options.criteria || {};
+    this.find(options.criteria)
+      .select(options.select)
+      .exec(cb);
   }
 }
 

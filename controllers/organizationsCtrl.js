@@ -29,6 +29,21 @@ exports.load = function (req, res, next) {
 };
 
 /**
+ * Fetch
+ */
+
+exports.fetch = function (req, res, next) {
+  var options = req.body;
+  Organization.fetch(options, function (err, organizations) {
+    console.log(organizations);
+    if (err) return next(err);
+    if (!organizations) return next(new Error('Failed to find organizations'));
+    req.organizations = organizations;
+    next();
+  });
+};
+
+/**
  * Create organization
  */
 
@@ -67,5 +82,6 @@ exports.showOne = function (req, res, next) {
  */
 
 exports.showAll = function (req, res) {
-  res.json(['un', 'deux']);
+  if (!req.organizations) return next(new Error('Organizations can\'t be null'));
+  res.status(200).json(req.organizations);
 };
