@@ -18,7 +18,7 @@ router.get('/signup', usersCtrl.signup);
 
 router
 .post('/',
-  passport.authenticate('basicAdmin', { session: false }),
+  passport.authenticate('admin', { session: false }),
   usersCtrl.create,
   usersCtrl.showOne
   );
