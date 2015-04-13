@@ -9,13 +9,14 @@ var usersCtrl = require('usersCtrl');
 router
 .get('/',
   passport.authenticate('basic', { session: false }),
-  organizationsCtrl.load,
-  organizationsCtrl.showOne
-  )
-.get('/list/',
-  passport.authenticate('basic', { session: false }),
   organizationsCtrl.fetch,
   organizationsCtrl.showAll
+  )
+.get('/:organizationId',
+  passport.authenticate('basic', { session: false }),
+  organizationsCtrl.select,
+  organizationsCtrl.load,
+  organizationsCtrl.showOne
   )
 .post('/',
   passport.authenticate('basic', { session: false }),
