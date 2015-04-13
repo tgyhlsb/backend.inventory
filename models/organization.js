@@ -115,7 +115,6 @@ OrganizationSchema.statics = {
    */
 
   fetch: function (options, cb) {
-    console.log('fetch ',options);
     options.select = options.select || 'name owner createdAt';
     options.criteria = options.criteria || {};
     this.find(options.criteria)
