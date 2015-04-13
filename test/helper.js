@@ -36,6 +36,22 @@ exports.error = function (code, message) {
     if (res.status !== code) throw new Error('Invalid response status');
     if (!res.body) throw new Error('Invalid body response');
     if (res.body.status !== code) throw new Error('Invalid error status');
-    if (res.body.error !== message) throw new Error('Invalid error message');
+    if (res.body.message !== message) throw new Error('Invalid error message');
+  };
+}
+
+/**
+ * Generate res json
+ *
+ * @param {Object} json
+ * @return {Function}
+ * @api public
+ */
+
+exports.json = function (json) {
+  return function (res) {
+    Object.keys(json).forEach(function (key) {
+      if (json[key] !== res.body[key]) throw new Error('Invalid value for key ' + key);
+    })
   };
 }

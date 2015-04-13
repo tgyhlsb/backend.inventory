@@ -41,6 +41,10 @@ describe('Users', function () {
         })
       })
 
+      /**
+       * No email
+       */
+
       it('no email - should respond with errors', function (done) {
         request(app)
         .post('/users/')
@@ -58,6 +62,10 @@ describe('Users', function () {
         .end(done)
       })
 
+      /**
+       * No username
+       */
+
       it('no username - should respond with errors', function (done) {
         request(app)
         .post('/users/')
@@ -74,6 +82,10 @@ describe('Users', function () {
         .expect(helper.error(400, 'User validation failed'))
         .end(done)
       })
+
+      /**
+       * No name
+       */
 
       it('no name - should respond with errors', function (done) {
         request(app)
@@ -108,17 +120,29 @@ describe('Users', function () {
         })
       })
 
-      it('should redirect to /articles', function (done) {
+      /**
+       * Respond with user info
+       */
+
+      it('Respond with new user info', function (done) {
         request(app)
-        .post('/users')
-        .field('name', 'Foo bar')
-        .field('username', 'foobar')
-        .field('email', 'foobar@example.com')
-        .field('password', 'foobar')
-        .expect('Content-Type', /plain/)
-        .expect('Location', /\//)
-        .expect(302)
-        .expect(/Moved Temporarily/)
+        .post('/users/')
+        .set({
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
+        })
+        .send({
+          name: 'Bob 3',
+          username: 'bob3',
+          email: 'bob3@test.com',
+          password: 'bob3'
+        })
+        .expect('Content-Type', 'application/json; charset=utf-8')
+        .expect(helper.json({
+          username: 'bob3',
+          email: 'bob3@test.com',
+          name: 'Bob 3'
+        }))
         .end(done)
       })
 
@@ -130,10 +154,10 @@ describe('Users', function () {
       })
 
       it('should save the user to the database', function (done) {
-        User.findOne({ username: 'foobar' }).exec(function (err, user) {
+        User.findOne({ username: 'bob3' }).exec(function (err, user) {
           should.not.exist(err)
           user.should.be.an.instanceOf(User)
-          user.email.should.equal('foobar@example.com')
+          user.email.should.equal('bob3@test.com')
           done()
         })
       })
