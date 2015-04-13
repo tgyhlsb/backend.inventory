@@ -35,7 +35,7 @@ exports.create = function (req, res, next) {
   if (!user) return next(new Error('Failed to create user'));
   user.save(function (err) {
     if (err) return next(err);
-    req.user = user;
+    req.profile = user;
     next();
   });
 };
@@ -69,8 +69,8 @@ exports.show = function (req, res) {
  */
 
 exports.showOne = function (req, res, next) {
-  if (!req.user) return next(new Error('User can\'t be null'));
-  res.status(200).json(req.user);
+  if (!req.profile) return next(new Error('Profile can\'t be null'));
+  res.status(200).json(req.profile);
 };
 
 exports.signin = function (req, res) {};
