@@ -25,6 +25,8 @@ module.exports = new BasicStrategy(
       if (!user.authenticate(password)) {
         return done(null, false, { message: 'Invalid password' });
       }
+      delete user.hashed_password;
+      delete user.salt;
       return done(null, user);
     });
   }

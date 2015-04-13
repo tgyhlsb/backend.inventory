@@ -25,6 +25,9 @@ module.exports = new BasicStrategy(
       if (!user.authenticate(password) && !user.isSystemAdmin) {
         return done(null, false, { message: 'Access denied' });
       }
+      delete user.hashed_password;
+      delete user.salt;
+      delete user.isSystemAdmin;
       return done(null, user);
     });
   }
