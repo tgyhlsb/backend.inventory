@@ -8,6 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var utils = require('./lib/utils');
 
 var app = express();
 
@@ -74,7 +75,8 @@ if (app.get('env') === 'development') {
     res.status(errCode);
     res.json({
       status: errCode,
-      error: err.message,
+      message: err.message,
+      errors: utils.errors(err.errors),
       stack: err.stack
     });
   });
@@ -87,7 +89,8 @@ app.use(function(err, req, res, next) {
     res.status(errCode);
     res.json({
       status: errCode,
-      error: err.message,
+      message: err.message,
+      errors: utils.errors(err.errors)
     });
 });
 
