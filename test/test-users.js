@@ -6,7 +6,7 @@
 var mongoose = require('mongoose')
   , should = require('should')
   , request = require('supertest')
-  , app = require('../server')
+  , app = require('../app')
   , context = describe
   , User = mongoose.model('User')
 
