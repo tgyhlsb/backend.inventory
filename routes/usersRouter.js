@@ -9,6 +9,11 @@ var usersCtrl = require('usersCtrl');
 var auth = require('../config/middlewares/authorization');
 
 router
+.get('/',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.fetch,
+  usersCtrl.showAll
+  )
 .post('/',
   passport.authenticate('admin', { session: false }),
   usersCtrl.create,
