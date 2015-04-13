@@ -14,14 +14,11 @@ var User = mongoose.model('User');
 
 module.exports = new BasicStrategy(
   function(email, password, done) {
-    console.log('email ', email);
-    console.log('password ', password);
     var options = {
       criteria: { email: email },
-      select: 'name username email hashed_password salt'
+      select: 'name username email hashed_password salt organization'
     };
     User.load(options, function (err, user) {
-      console.log(user);
       if (err) return done(err)
       if (!user) {
         return done(null, false, { message: 'Unknown user' });
