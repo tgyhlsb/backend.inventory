@@ -5,7 +5,6 @@
 
 var mongoose = require('mongoose');
 var BasicStrategy = require('passport-http').BasicStrategy;
-var config = require('config');
 var User = mongoose.model('User');
 
 /**
