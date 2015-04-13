@@ -58,16 +58,37 @@ describe('Users', function () {
         .end(done)
       })
 
+      it('no username - should respond with errors', function (done) {
+        request(app)
+        .post('/users/')
+        .set({
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
+        })
+        .send({
+          name: 'Bob1',
+          email: 'bob1@test.com',
+          password: 'bob1'
+        })
+        .expect('Content-Type', 'application/json; charset=utf-8')
+        .expect(helper.error(400, 'User validation failed'))
+        .end(done)
+      })
+
       it('no name - should respond with errors', function (done) {
         request(app)
-        .post('/users')
-        .field('name', '')
-        .field('username', 'foobar')
-        .field('email', 'foobar@example.com')
-        .field('password', 'foobar')
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(/Name cannot be blank/)
+        .post('/users/')
+        .set({
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
+        })
+        .send({
+          username: 'bob2',
+          email: 'bob2@test.com',
+          password: 'bob2'
+        })
+        .expect('Content-Type', 'application/json; charset=utf-8')
+        .expect(helper.error(400, 'User validation failed'))
         .end(done)
       })
 
