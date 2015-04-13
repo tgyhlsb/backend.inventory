@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 
 // Controllers
 var usersCtrl = require('usersCtrl');
+
+// Middlewares
+var auth = require('../config/middlewares/authorization');
 
 /* GET usersCtrl listing. */
 router.get('/', function(req, res, next) {
@@ -14,7 +18,7 @@ router.get('/signup', usersCtrl.signup);
 
 router
 .post('/',
-  // passport.authenticate('basic', { session: false }),
+  passport.authenticate('basicAdmin', { session: false }),
   usersCtrl.create,
   usersCtrl.showOne
   );

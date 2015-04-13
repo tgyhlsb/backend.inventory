@@ -9,6 +9,7 @@ var User = mongoose.model('User');
 
 var local = require('./passport/local');
 var basic = require('./passport/basic');
+var basicAdmin = require('./passport/basicAdmin');
 
 /**
  * Expose
@@ -29,4 +30,5 @@ module.exports = function (passport, config) {
   // use these strategies
   passport.use(local);
   passport.use(basic);
+  passport.use('basicAdmin', basicAdmin);
 };
