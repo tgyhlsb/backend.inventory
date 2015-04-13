@@ -23,7 +23,8 @@ exports.load = function (req, res, next) {
   Organization.load(options, function (err, organization) {
     if (err) return next(err);
     if (!organization) return next(new Error('Failed to load Organization ' + organizationId));
-    next(organization);
+    req.organization = organization;
+    next();
   });
 };
 
@@ -34,14 +35,16 @@ exports.load = function (req, res, next) {
 exports.create = function (req, res, next) {
   var organization = new Organization(req.body);
   if (!organization) return next(new Error('Failed to create organization'));
-  return next(organization);
+  req.organization = organization;
+  return next();
 };
 
-exports.setOwner = function (organization, req, res, next) {
+exports.setOwner = function (req, res, next) {
+  if (!req.organization) return next(new Error('Organization can\'t be null'));
   organization.setOwner(req.user);
   organization.save(function (err) {
     if (err) return next(err);
-    return next(organization);
+    return next();
   });
 };
 
@@ -49,13 +52,9 @@ exports.setOwner = function (organization, req, res, next) {
  *  Show organization
  */
 
-exports.showOne = function (organization, req, res, next) {
-  var org = organization || req.organization;
-  if (org) {
-    res.status(200).json(org);
-  } else {
-    res.status(404).send('Organization not found');
-  }
+exports.showOne = function (req, res, next) {
+  if (!req.organization) return next(new Error('Organization can\'t be null'));
+  res.status(200).json(req.organization);
 };
 
 /**
