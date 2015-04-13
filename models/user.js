@@ -5,6 +5,7 @@
 
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var utils = require('../lib/utils');
 
 var Schema = mongoose.Schema;
 
@@ -202,6 +203,9 @@ UserSchema.statics = {
   fetch: function (options, cb) {
     options.select = options.select || 'name username createdAt';
     options.criteria = options.criteria || {};
+
+    if (!utils.validateCriteria(options.criteria)) return cb(new Error('Invalid id'), null);
+
     this.find(options.criteria)
       .select(options.select)
       .exec(cb);
