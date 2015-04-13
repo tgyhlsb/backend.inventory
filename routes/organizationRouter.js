@@ -24,6 +24,11 @@ router
   organizationsCtrl.setOwner,
   usersCtrl.setAdminOf,
   organizationsCtrl.showOne
+  )
+.post('/query/',
+  passport.authenticate('admin', { session: false }),
+  organizationsCtrl.fetch,
+  organizationsCtrl.showAll
   );
 
 
