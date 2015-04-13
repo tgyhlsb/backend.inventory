@@ -48,9 +48,9 @@ app.set('view engine', 'jade');
 
 // Models must be required after models
 var routes = require('./routes/index');
-var apiRoutes = require('./routes/apiRoutes');
-var usersRoutes = require('./routes/usersRoutes');
-var organizationRoutes = require('./routes/organizationRoutes');
+var apiRoutes = require('./routes/apiRouter');
+var usersRoutes = require('./routes/usersRouter');
+var organizationRoutes = require('./routes/organizationRouter');
 
 app.use('/', routes);
 app.use('/api', apiRoutes);
