@@ -8,6 +8,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var utils = require('./lib/utils');
 
 var app = express();
 
@@ -70,11 +71,12 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    var errCode = err.code || 500;
+    var errCode = err.code || 400;
     res.status(errCode);
     res.json({
       status: errCode,
-      error: err.message,
+      message: err.message,
+      errors: utils.errors(err.errors),
       stack: err.stack
     });
   });
@@ -83,11 +85,12 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    var errCode = err.code || 500;
+    var errCode = err.code || 400;
     res.status(errCode);
     res.json({
       status: errCode,
-      error: err.message,
+      message: err.message,
+      errors: utils.errors(err.errors)
     });
 });
 
