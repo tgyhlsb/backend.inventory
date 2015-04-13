@@ -5,10 +5,11 @@
 
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var utils = require('../lib/utils');
 
 var Schema = mongoose.Schema;
-var oAuthTypes = [
-];
+
+var Organization = mongoose.model('Organization');
 
 /**
  * User Schema
@@ -18,10 +19,15 @@ var UserSchema = new Schema({
   name: { type: String, default: '' },
   email: { type: String, default: '' },
   username: { type: String, default: '' },
-  provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
+  joinedAt  : { type : Date, default : Date.now },
+  organization: {
+    id: { type: Schema.ObjectId, ref: 'Organization' },
+    role: { type: String, default: '' }
+  },
+
+  isSystemAdmin: { type: Boolean, default: false }
 });
 
 /**
@@ -48,18 +54,15 @@ var validatePresenceOf = function (value) {
 // the below 5 validations only apply if you are signing up traditionally
 
 UserSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
   return name.length;
 }, 'Name cannot be blank');
 
 UserSchema.path('email').validate(function (email) {
-  if (this.skipValidation()) return true;
   return email.length;
 }, 'Email cannot be blank');
 
 UserSchema.path('email').validate(function (email, fn) {
   var User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
 
   // Check only when it is a new user or when email field is modified
   if (this.isNew || this.isModified('email')) {
@@ -70,12 +73,10 @@ UserSchema.path('email').validate(function (email, fn) {
 }, 'Email already exists');
 
 UserSchema.path('username').validate(function (username) {
-  if (this.skipValidation()) return true;
   return username.length;
 }, 'Username cannot be blank');
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.skipValidation()) return true;
   return hashed_password.length;
 }, 'Password cannot be blank');
 
@@ -87,8 +88,8 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 UserSchema.pre('save', function(next) {
   if (!this.isNew) return next();
 
-  if (!validatePresenceOf(this.password) && !this.skipValidation()) {
-    next(new Error('Invalid password'));
+  if (!validatePresenceOf(this.password)) {
+    next(utils.error(500, 'Invalid password'));
   } else {
     next();
   }
@@ -144,11 +145,29 @@ UserSchema.methods = {
   },
 
   /**
-   * Validation is not required if using OAuth
+   * SetOrganization - set the organization
+   *
+   * @param {Organization} organization
+   * @api public
    */
 
-  skipValidation: function() {
-    return ~oAuthTypes.indexOf(this.provider);
+  setOrganization: function (organization, role) {
+    this.organization = {
+      id: organization._id,
+      role: role
+    };
+  },
+
+  /**
+   * IsOrganization - Check if the organization is the user's organization
+   *
+   * @param {Organization} organization
+   * return {Boolean}
+   * @api public
+   */
+
+  isOrganization: function (organization) {
+    return (this.organization.id === organization._id);
   }
 };
 
@@ -169,6 +188,25 @@ UserSchema.statics = {
   load: function (options, cb) {
     options.select = options.select || 'name username';
     this.findOne(options.criteria)
+      .select(options.select)
+      .exec(cb);
+  },
+
+  /**
+   * Fetch
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  fetch: function (options, cb) {
+    options.select = options.select || 'name username createdAt';
+    options.criteria = options.criteria || {};
+
+    if (!utils.validateCriteria(options.criteria)) return cb(utils.error(400, 'Invalid id'), null);
+
+    this.find(options.criteria)
       .select(options.select)
       .exec(cb);
   }
