@@ -15,7 +15,9 @@ var User = mongoose.model('User');
  */
 
 exports.select = function (req, res, next) {
-  req.body._id = req.params.organizationId;
+  req.body.criteria = {
+    _id: req.params.organizationId
+  };
   return next();
 };
 
