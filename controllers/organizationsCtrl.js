@@ -46,7 +46,6 @@ exports.load = function (req, res, next) {
 exports.fetch = function (req, res, next) {
   var options = req.body;
   Organization.fetch(options, function (err, organizations) {
-    console.log(organizations);
     if (err) return next(err);
     if (!organizations) return next(new Error('Failed to find organizations'));
     req.organizations = organizations;
