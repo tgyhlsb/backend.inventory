@@ -11,17 +11,26 @@ var User = mongoose.model('User');
 var Organization = mongoose.model('Organization');
 
 /**
- * Load
+ * Select - select which organization to load (user's one or params)
  */
 
-exports.load = function (req, res, next, id) {
-  var options = {
-    criteria: { _id : id }
+exports.select = function (req, res, next) {
+  req.body.criteria = {
+    _id: req.params.userId
   };
-  User.load(options, function (err, user) {
+  return next();
+};
+
+/**
+ * Fetch
+ */
+
+exports.fetch = function (req, res, next) {
+  var options = req.body;
+  User.fetch(options, function (err, users) {
     if (err) return next(err);
-    if (!user) return next(new Error('Failed to load User ' + id));
-    req.profile = user;
+    if (!users) return next(new Error('Failed to find users'));
+    req.profiles = users;
     next();
   });
 };
@@ -30,28 +39,18 @@ exports.load = function (req, res, next, id) {
  * Create user
  */
 
-exports.create = function (req, res) {
+exports.create = function (req, res, next) {
   var user = new User(req.body);
-  user.provider = 'local';
+  if (!user) return next(new Error('Failed to create user'));
   user.save(function (err) {
-    if (err) {
-      return res.render('users/signup', {
-        error: utils.errors(err.errors),
-        user: user,
-        title: 'Sign up'
-      });
-    }
-
-    // manually login the user once successfully signed up
-    req.logIn(user, function(err) {
-      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-      return res.redirect('/');
-    });
+    if (err) return next(err);
+    req.profile = user;
+    next();
   });
 };
 
 /**
- *  Set organization with admin role
+ *  Set user's organization with admin role
  */
 
 exports.setAdminOf = function (req, res, next) {
@@ -63,67 +62,20 @@ exports.setAdminOf = function (req, res, next) {
 };
 
 /**
- *  Show profile
+ *  Show one profile
  */
 
-exports.show = function (req, res) {
-  var user = req.profile;
-  res.render('users/show', {
-    title: user.name,
-    user: user
-  });
-};
-
-exports.signin = function (req, res) {};
-
-/**
- * Auth callback
- */
-
-exports.authCallback = login;
-
-/**
- * Show login form
- */
-
-exports.login = function (req, res) {
-  res.render('users/login', {
-    title: 'Login'
-  });
+exports.showOne = function (req, res, next) {
+  var profile = req.profile || req.profiles[0];
+  if (!profile) return next(new Error('Profile can\'t be null'));
+  res.status(200).json(profile);
 };
 
 /**
- * Show sign up form
+ *  Show all profiles
  */
 
-exports.signup = function (req, res) {
-  res.render('users/signup', {
-    title: 'Sign up',
-    user: new User()
-  });
-};
-
-/**
- * Logout
- */
-
-exports.logout = function (req, res) {
-  req.logout();
-  res.redirect('/login');
-};
-
-/**
- * Session
- */
-
-exports.session = login;
-
-/**
- * Login
- */
-
-function login (req, res) {
-  var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
-  delete req.session.returnTo;
-  res.redirect(redirectTo);
+exports.showAll = function (req, res, next) {
+  if (!req.profiles) return next(new Error('Profile can\'t be null'));
+  res.status(200).json(req.profiles);
 };

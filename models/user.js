@@ -18,15 +18,15 @@ var UserSchema = new Schema({
   name: { type: String, default: '' },
   email: { type: String, default: '' },
   username: { type: String, default: '' },
-  provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
   joinedAt  : { type : Date, default : Date.now },
   organization: {
     id: { type: Schema.ObjectId, ref: 'Organization' },
     role: { type: String, default: '' }
-  }
+  },
+
+  isSystemAdmin: { type: Boolean, default: false }
 });
 
 /**
@@ -87,7 +87,7 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 UserSchema.pre('save', function(next) {
   if (!this.isNew) return next();
 
-  if (!validatePresenceOf(this.password) && !this.skipValidation()) {
+  if (!validatePresenceOf(this.password)) {
     next(new Error('Invalid password'));
   } else {
     next();
@@ -187,6 +187,22 @@ UserSchema.statics = {
   load: function (options, cb) {
     options.select = options.select || 'name username';
     this.findOne(options.criteria)
+      .select(options.select)
+      .exec(cb);
+  },
+
+  /**
+   * Fetch
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  fetch: function (options, cb) {
+    options.select = options.select || 'name username createdAt';
+    options.criteria = options.criteria || {};
+    this.find(options.criteria)
       .select(options.select)
       .exec(cb);
   }

@@ -1,17 +1,35 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 
 // Controllers
 var usersCtrl = require('usersCtrl');
 
-/* GET usersCtrl listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+// Middlewares
+var auth = require('../config/middlewares/authorization');
 
-router.get('/login', usersCtrl.login);
-router.get('/signup', usersCtrl.signup);
-router.post('/', usersCtrl.create);
+router
+.get('/',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.fetch,
+  usersCtrl.showAll
+  )
+.get('/:userId',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.select,
+  usersCtrl.fetch,
+  usersCtrl.showOne
+  )
+.post('/',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.create,
+  usersCtrl.showOne
+  )
+.post('/query/',
+  passport.authenticate('admin', { session: false }),
+  usersCtrl.fetch,
+  usersCtrl.showAll
+  );
 
 
 module.exports = router;

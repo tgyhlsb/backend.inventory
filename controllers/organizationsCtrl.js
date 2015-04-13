@@ -11,13 +11,13 @@ var Organization = mongoose.model('Organization');
 var User = mongoose.model('User');
 
 /**
- * Select - select which organization to load (user's one or params)
+ * Select - select which organization to load
  */
 
 exports.select = function (req, res, next) {
-  var organizationId = req.params.organizationId || req.user.organization.id;
-  if (!organizationId) return next(new Error('OrganizationId can\'t be null'));
-  req.selectedOrganizationId = organizationId;
+  req.body.criteria = {
+    _id: req.params.organizationId
+  };
   return next();
 };
 
@@ -26,8 +26,8 @@ exports.select = function (req, res, next) {
  */
 
 exports.load = function (req, res, next) {
-  var organizationId = req.selectedOrganizationId;
-  if (!organizationId) return next(new Error('OrganizationId can\'t be null'));
+  var organizationId = req.user.organization.id;
+  if (!organizationId) return next(new Error('OrganizationId not set'));
   var options = {
     criteria: { _id : organizationId }
   };
@@ -83,8 +83,9 @@ exports.setOwner = function (req, res, next) {
  */
 
 exports.showOne = function (req, res, next) {
-  if (!req.organization) return next(new Error('Organization can\'t be null'));
-  res.status(200).json(req.organization);
+  var organization = req.organization || req.organizations[0];
+  if (!organization) return next(new Error('Organization can\'t be null'));
+  res.status(200).json(organization);
 };
 
 /**

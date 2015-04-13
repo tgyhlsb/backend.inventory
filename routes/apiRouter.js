@@ -8,13 +8,12 @@ var usersCtrl = require('usersCtrl');
 
 router
 .get('/organization/',
-  passport.authenticate('basic', { session: false }),
-  organizationsCtrl.select,
+  passport.authenticate('api', { session: false }),
   organizationsCtrl.load,
   organizationsCtrl.showOne
   )
 .post('/organization/',
-  passport.authenticate('basic', { session: false }),
+  passport.authenticate('api', { session: false }),
   organizationsCtrl.create,
   organizationsCtrl.setOwner,
   usersCtrl.setAdminOf,
