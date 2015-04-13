@@ -15,7 +15,7 @@ router
 .get('/:organizationId',
   passport.authenticate('admin', { session: false }),
   organizationsCtrl.select,
-  organizationsCtrl.load,
+  organizationsCtrl.fetch,
   organizationsCtrl.showOne
   )
 .post('/',
