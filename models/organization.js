@@ -48,7 +48,7 @@ OrganizationSchema.pre('save', function(next) {
   if (!this.isNew) return next();
 
   if (!validatePresenceOf(this.name)) {
-    next(new Error('Invalid name'));
+    next(utils.error(500, 'Invalid password'));
   } else {
     next();
   }
@@ -119,7 +119,7 @@ OrganizationSchema.statics = {
     options.select = options.select || 'name owner createdAt';
     options.criteria = options.criteria || {};
 
-    if (!utils.validateCriteria(options.criteria)) return cb(new Error('Invalid id'), null);
+    if (!utils.validateCriteria(options.criteria)) return cb(utils.error(400, 'Invalid id'), null);
 
     this.find(options.criteria)
       .select(options.select)

@@ -29,7 +29,7 @@ exports.fetch = function (req, res, next) {
   var options = req.body;
   User.fetch(options, function (err, users) {
     if (err) return next(err);
-    if (!users) return next(new Error('Failed to find users'));
+    if (!users) return next(utils.error(500, 'Failed to find users'));
     req.profiles = users;
     next();
   });
@@ -41,7 +41,7 @@ exports.fetch = function (req, res, next) {
 
 exports.create = function (req, res, next) {
   var user = new User(req.body);
-  if (!user) return next(new Error('Failed to create user'));
+  if (!user) return next(utils.error(500, 'Failed to create user'));
   user.save(function (err) {
     if (err) return next(err);
     req.profile = user;
@@ -67,7 +67,7 @@ exports.setAdminOf = function (req, res, next) {
 
 exports.showOne = function (req, res, next) {
   var profile = req.profile || req.profiles[0];
-  if (!profile) return next(new Error('Profile can\'t be null'));
+  if (!profile) return next(utils.error(400, 'Profile can\'t be null'));
   res.status(200).json(profile);
 };
 
@@ -76,6 +76,6 @@ exports.showOne = function (req, res, next) {
  */
 
 exports.showAll = function (req, res, next) {
-  if (!req.profiles) return next(new Error('Profile can\'t be null'));
+  if (!req.profiles) return next(utils.error(400, 'Profile can\'t be null'));
   res.status(200).json(req.profiles);
 };
