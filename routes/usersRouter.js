@@ -11,7 +11,13 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', usersCtrl.login);
 router.get('/signup', usersCtrl.signup);
-router.post('/', usersCtrl.create);
+
+router
+.post('/',
+  // passport.authenticate('basic', { session: false }),
+  usersCtrl.create,
+  usersCtrl.showOne
+  );
 
 
 module.exports = router;

@@ -18,10 +18,8 @@ var UserSchema = new Schema({
   name: { type: String, default: '' },
   email: { type: String, default: '' },
   username: { type: String, default: '' },
-  provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
   joinedAt  : { type : Date, default : Date.now },
   organization: {
     id: { type: Schema.ObjectId, ref: 'Organization' },
@@ -41,6 +39,10 @@ UserSchema
     this.hashed_password = this.encryptPassword(password);
   })
   .get(function() { return this._password });
+
+UserSchema
+  .virtual('isSystemAdmin')
+  .get(function() { return this._systemAdmin || false });
 
 /**
  * Validations
@@ -87,7 +89,7 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
 UserSchema.pre('save', function(next) {
   if (!this.isNew) return next();
 
-  if (!validatePresenceOf(this.password) && !this.skipValidation()) {
+  if (!validatePresenceOf(this.password)) {
     next(new Error('Invalid password'));
   } else {
     next();

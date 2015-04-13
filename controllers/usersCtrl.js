@@ -30,23 +30,13 @@ exports.load = function (req, res, next, id) {
  * Create user
  */
 
-exports.create = function (req, res) {
+exports.create = function (req, res, next) {
   var user = new User(req.body);
-  user.provider = 'local';
+  if (!user) return next(new Error('Failed to create user'));
   user.save(function (err) {
-    if (err) {
-      return res.render('users/signup', {
-        error: utils.errors(err.errors),
-        user: user,
-        title: 'Sign up'
-      });
-    }
-
-    // manually login the user once successfully signed up
-    req.logIn(user, function(err) {
-      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-      return res.redirect('/');
-    });
+    if (err) return next(err);
+    req.user = user;
+    next();
   });
 };
 
@@ -72,6 +62,15 @@ exports.show = function (req, res) {
     title: user.name,
     user: user
   });
+};
+
+/**
+ *  Show user
+ */
+
+exports.showOne = function (req, res, next) {
+  if (!req.user) return next(new Error('User can\'t be null'));
+  res.status(200).json(req.user);
 };
 
 exports.signin = function (req, res) {};
