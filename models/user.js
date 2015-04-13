@@ -24,7 +24,9 @@ var UserSchema = new Schema({
   organization: {
     id: { type: Schema.ObjectId, ref: 'Organization' },
     role: { type: String, default: '' }
-  }
+  },
+
+  isSystemAdmin: { type: Boolean, default: false }
 });
 
 /**
@@ -39,10 +41,6 @@ UserSchema
     this.hashed_password = this.encryptPassword(password);
   })
   .get(function() { return this._password });
-
-UserSchema
-  .virtual('isSystemAdmin')
-  .get(function() { return this._systemAdmin || false });
 
 /**
  * Validations
