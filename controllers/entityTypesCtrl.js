@@ -62,8 +62,12 @@ exports.create = function (req, res, next) {
   var data = req.body.entityType || req.body;
   var entityType = new EntityType(data);
   if (!entityType) return next(utils.error(500, 'Failed to create EntityType'));
-  req.entityType = entityType;
-  return next();
+
+  entityType.save(function (err) {
+    if (err) return next(err);
+    req.entityType = entityType;
+    return next();
+  });
 };
 
 /**
