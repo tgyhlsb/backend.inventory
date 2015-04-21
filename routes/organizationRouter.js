@@ -8,25 +8,25 @@ var usersCtrl = require('usersCtrl');
 
 router
 .get('/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   organizationsCtrl.fetch,
   organizationsCtrl.showAll
   )
 .get('/:organizationId',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   organizationsCtrl.select,
   organizationsCtrl.fetch,
   organizationsCtrl.showOne
   )
 .post('/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   organizationsCtrl.create,
   organizationsCtrl.setOwner,
   usersCtrl.setAdminOf,
   organizationsCtrl.showOne
   )
 .post('/query/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   organizationsCtrl.fetch,
   organizationsCtrl.showAll
   );
