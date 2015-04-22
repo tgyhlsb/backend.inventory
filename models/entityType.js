@@ -38,6 +38,21 @@ var EntityTypeSchema = new Schema({
       }
     }
   ],
+  attributes: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      help: {
+        type: String
+      },
+      mandatory: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
   createdAt  : {
     type : Date,
     default : Date.now
@@ -83,6 +98,20 @@ EntityTypeSchema.path('organization').validate(function (organization) {
   return err;
  };
 
+ var attributesError = function(entityType) {
+  var err = null;
+  var attributes = [];
+  entityType.attributes.forEach(function (attribute) {
+    if (attributes.indexOf(attribute.name) === -1) {
+      attributes.push(attribute.name);
+    } else {
+      err = 'Duplicate attribute name \'' + attribute.name + '\'';
+      return; // break loop
+    }
+  });
+  return err;
+ };
+
 EntityTypeSchema.pre('save', function(next) {
 
   if (!this.isNew) return next();
@@ -91,7 +120,7 @@ EntityTypeSchema.pre('save', function(next) {
     return next(utils.error(400, 'Invalid name'));
   }
 
-  var err = rolesError(this);
+  var err = rolesError(this) || attributesError(this);
   if (err) return next(utils.error(400, err));
 
   next();
@@ -119,7 +148,7 @@ EntityTypeSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name organization roles';
+    options.select = options.select || 'name organization roles attributes';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
@@ -134,7 +163,7 @@ EntityTypeSchema.statics = {
    */
 
   fetch: function (options, cb) {
-    options.select = options.select || 'name organization roles';
+    options.select = options.select || 'name organization roles attributes';
     options.criteria = options.criteria || {};
 
     if (!utils.validateCriteria(options.criteria)) return cb(utils.error(400, 'Invalid id'), null);
