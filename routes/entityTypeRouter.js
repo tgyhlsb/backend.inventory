@@ -5,30 +5,30 @@ var passport = require('passport');
 // Controllers
 var organizationsCtrl = require('organizationsCtrl');
 var usersCtrl = require('usersCtrl');
+var entityTypesCtrl = require('entityTypesCtrl');
 
 router
 .get('/',
   passport.authenticate('root', { session: false }),
-  organizationsCtrl.fetch,
-  organizationsCtrl.showAll
+  entityTypesCtrl.fetch,
+  entityTypesCtrl.showAll
   )
-.get('/:organizationId',
+.get('/:entityTypeId',
   passport.authenticate('root', { session: false }),
-  organizationsCtrl.select,
-  organizationsCtrl.fetch,
-  organizationsCtrl.showOne
+  entityTypesCtrl.select,
+  entityTypesCtrl.fetch,
+  entityTypesCtrl.showOne
   )
 .post('/',
   passport.authenticate('root', { session: false }),
-  organizationsCtrl.create,
-  organizationsCtrl.setOwner,
-  usersCtrl.setAdminOf,
-  organizationsCtrl.showOne
+  entityTypesCtrl.fetchDuplicates,
+  entityTypesCtrl.create,
+  entityTypesCtrl.showOne
   )
 .post('/query/',
   passport.authenticate('root', { session: false }),
-  organizationsCtrl.fetch,
-  organizationsCtrl.showAll
+  entityTypesCtrl.fetch,
+  entityTypesCtrl.showAll
   );
 
 
