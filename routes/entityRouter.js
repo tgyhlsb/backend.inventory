@@ -10,23 +10,23 @@ var auth = require('../config/middlewares/authorization');
 
 router
 .get('/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   entitiesCtrl.fetch,
   entitiesCtrl.showAll
   )
 .get('/:entityId',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   entitiesCtrl.select,
   entitiesCtrl.fetch,
   entitiesCtrl.showOne
   )
 .post('/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   entitiesCtrl.create,
   entitiesCtrl.showOne
   )
 .post('/query/',
-  passport.authenticate('admin', { session: false }),
+  passport.authenticate('root', { session: false }),
   entitiesCtrl.fetch,
   entitiesCtrl.showAll
   );
