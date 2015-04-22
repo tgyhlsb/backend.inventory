@@ -14,9 +14,34 @@ var Schema = mongoose.Schema;
  */
 
 var EntityTypeSchema = new Schema({
-  name: { type: String, default: 'New EntityType' },
-  organization: { type: Schema.ObjectId, ref: 'Organization' },
-  createdAt  : { type : Date, default : Date.now }
+  name: {
+    type: String,
+    required: true
+  },
+  organization: {
+    type: Schema.ObjectId,
+    ref: 'Organization',
+    required: true
+  },
+  roles: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      help: {
+        type: String
+      },
+      mandatory: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
+  createdAt  : {
+    type : Date,
+    default : Date.now
+  }
 });
 
 /**
@@ -44,14 +69,32 @@ EntityTypeSchema.path('organization').validate(function (organization) {
  * Pre-save hook
  */
 
+ var rolesError = function(entityType) {
+  var err = null;
+  var roles = [];
+  entityType.roles.forEach(function (role) {
+    if (roles.indexOf(role.name) === -1) {
+      roles.push(role.name);
+    } else {
+      err = 'Duplicate role name \'' + role.name + '\'';
+      return; // break loop
+    }
+  });
+  return err;
+ };
+
 EntityTypeSchema.pre('save', function(next) {
+
   if (!this.isNew) return next();
 
   if (!validatePresenceOf(this.name)) {
-    next(utils.error(500, 'Invalid name'));
-  } else {
-    next();
+    return next(utils.error(400, 'Invalid name'));
   }
+
+  var err = rolesError(this);
+  if (err) return next(utils.error(400, err));
+
+  next();
 });
 
 /**
@@ -59,29 +102,6 @@ EntityTypeSchema.pre('save', function(next) {
  */
 
 EntityTypeSchema.methods = {
-
-  /**
-   * SetOwner - set the owner
-   *
-   * @param {UserSchema} owner
-   * @api public
-   */
-
-  setOwner: function (owner) {
-    this.owner = owner._id;
-  },
-
-  /**
-   * IsOwner - Check if the user is the EntityType's owner
-   *
-   * @param {UserSchema} user
-   * return {Boolean}
-   * @api public
-   */
-
-  isOwner: function (user) {
-    return (this.owner === user._id);
-  }
 };
 
 /**
@@ -99,7 +119,7 @@ EntityTypeSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name organization createdAt';
+    options.select = options.select || 'name organization roles';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
@@ -114,7 +134,7 @@ EntityTypeSchema.statics = {
    */
 
   fetch: function (options, cb) {
-    options.select = options.select || 'name organization createdAt';
+    options.select = options.select || 'name organization roles';
     options.criteria = options.criteria || {};
 
     if (!utils.validateCriteria(options.criteria)) return cb(utils.error(400, 'Invalid id'), null);
