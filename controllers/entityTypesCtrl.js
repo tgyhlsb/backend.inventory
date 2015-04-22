@@ -23,24 +23,6 @@ exports.select = function (req, res, next) {
 };
 
 /**
- * Load - load user's organization
- */
-
-// exports.load = function (req, res, next) {
-//   var organizationId = req.user.organization.id;
-//   if (!organizationId) return next(utils.error(400, 'OrganizationId not set'));
-//   var options = {
-//     criteria: { _id : organizationId }
-//   };
-//   Organization.load(options, function (err, organization) {
-//     if (err) return next(err);
-//     if (!organization) return next(utils.error(500, 'Failed to load Organization ' + organizationId));
-//     req.organization = organization;
-//     next();
-//   });
-// };
-
-/**
  * Fetch
  */
 
@@ -55,6 +37,27 @@ exports.fetch = function (req, res, next) {
 };
 
 /**
+ * Fetch duplicates
+ */
+
+exports.fetchDuplicates = function (req, res, next) {
+  var data = req.body.entityType || req.body;
+  var options = {
+    criteria: {
+      organization: data.organization,
+      name: data.name
+    }
+  };
+  EntityType.fetch(options, function (err, entityTypes) {
+    if (err) return next(err);
+    if (entityTypes && entityTypes.length) {
+      return next(utils.error(400, 'EntityType \'' + data.name + '\' already exists'));
+    }
+    next();
+  });
+};
+
+/**
  * Create
  */
 
@@ -62,26 +65,12 @@ exports.create = function (req, res, next) {
   var data = req.body.entityType || req.body;
   var entityType = new EntityType(data);
   if (!entityType) return next(utils.error(500, 'Failed to create EntityType'));
-
   entityType.save(function (err) {
     if (err) return next(err);
     req.entityType = entityType;
     return next();
   });
 };
-
-/**
- * Set organization's owner
- */
-
-// exports.setOwner = function (req, res, next) {
-//   if (!req.organization) return next(utils.error(400, 'Organization can\'t be null'));
-//   req.organization.setOwner(req.user);
-//   req.organization.save(function (err) {
-//     if (err) return next(err);
-//     return next();
-//   });
-// };
 
 /**
  *  Show entityType
