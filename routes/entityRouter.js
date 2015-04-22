@@ -14,7 +14,7 @@ router
   entitiesCtrl.fetch,
   entitiesCtrl.showAll
   )
-.get('/:userId',
+.get('/:entityId',
   passport.authenticate('admin', { session: false }),
   entitiesCtrl.select,
   entitiesCtrl.fetch,
