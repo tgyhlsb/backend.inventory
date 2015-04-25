@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var utils = require('../lib/utils');
+var idValidator = require('mongoose-id-validator');
 
 var Schema = mongoose.Schema;
 
@@ -73,9 +74,7 @@ EntitySchema.pre('save', function(next) {
     return next(utils.error(400, 'Invalid name'));
   }
 
-  Organization.exists(this.organization, function(err, exists) {
-    return exists ? next() : next(utils.error(400, 'Organization does not exist'));
-  });
+  next();
 });
 
 /**
@@ -126,4 +125,5 @@ EntitySchema.statics = {
   }
 }
 
+EntitySchema.plugin(idValidator);
 mongoose.model('Entity', EntitySchema);
