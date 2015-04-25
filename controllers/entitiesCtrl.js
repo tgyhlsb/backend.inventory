@@ -38,27 +38,6 @@ exports.fetch = function (req, res, next) {
 };
 
 /**
- * Fetch duplicates
- */
-
-exports.fetchDuplicates = function (req, res, next) {
-  var data = req.body.entity || req.body;
-  var options = {
-    criteria: {
-      organization: data.organization,
-      name: data.name
-    }
-  }
-  Entity.fetch(options, function (err, entities) {
-    if (err) return next(err);
-    if (entities && entities.length) {
-      return next(utils.error(400, 'Entity \'' + data.name + '\' already exists'));
-    }
-    return next();
-  });
-};
-
-/**
  * Create
  */
 

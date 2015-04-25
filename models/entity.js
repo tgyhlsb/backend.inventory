@@ -57,9 +57,16 @@ EntitySchema.path('name').validate(function (name) {
   return validatePresenceOf(name);
 }, 'Name cannot be blank');
 
-EntitySchema.path('organization').validate(function (organization) {
-  return validatePresenceOf(organization);
-}, 'Organization cannot be null');
+EntitySchema.path('name').validate(function (name, fn) {
+  var Entity = mongoose.model('Entity');
+
+  // Check only when it is a new entity or when name field is modified
+  if (this.isNew || this.isModified('name')) {
+    Entity.count({ name: name }).exec(function (err, count) {
+      fn(!err && count === 0);
+    });
+  } else fn(true);
+}, 'Name already exists');
 
 
 /**
