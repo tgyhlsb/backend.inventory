@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var utils = require('../lib/utils');
+var idValidator = require('mongoose-id-validator');
 
 var Schema = mongoose.Schema;
 
@@ -174,4 +175,5 @@ EntityTypeSchema.statics = {
   }
 }
 
+EntityTypeSchema.plugin(idValidator);
 mongoose.model('EntityType', EntityTypeSchema);
