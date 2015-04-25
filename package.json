@@ -22,6 +22,7 @@
     "jade": "~1.9.2",
     "method-override": "^2.3.2",
     "mongoose": "^4.0.1",
+    "mongoose-id-validator": "^0.1.8",
     "morgan": "~1.5.1",
     "multer": "^0.1.8",
     "passport": "^0.2.1",
