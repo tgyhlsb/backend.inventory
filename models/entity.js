@@ -65,34 +65,6 @@ EntitySchema.path('organization').validate(function (organization) {
  * Pre-save hook
  */
 
- // var rolesError = function(entityType) {
- //  var err = null;
- //  var roles = [];
- //  entityType.roles.forEach(function (role) {
- //    if (roles.indexOf(role.name) === -1) {
- //      roles.push(role.name);
- //    } else {
- //      err = 'Duplicate role name \'' + role.name + '\'';
- //      return; // break loop
- //    }
- //  });
- //  return err;
- // };
-
- // var attributesError = function(entityType) {
- //  var err = null;
- //  var attributes = [];
- //  entityType.attributes.forEach(function (attribute) {
- //    if (attributes.indexOf(attribute.name) === -1) {
- //      attributes.push(attribute.name);
- //    } else {
- //      err = 'Duplicate attribute name \'' + attribute.name + '\'';
- //      return; // break loop
- //    }
- //  });
- //  return err;
- // };
-
 EntitySchema.pre('save', function(next) {
 
   if (!this.isNew) return next();
@@ -100,9 +72,6 @@ EntitySchema.pre('save', function(next) {
   if (!validatePresenceOf(this.name)) {
     return next(utils.error(400, 'Invalid name'));
   }
-
-  // var err = rolesError(this) || attributesError(this);
-  // if (err) return next(utils.error(400, err));
 
   Organization.exists(this.organization, function(err, exists) {
     return exists ? next() : next(utils.error(400, 'Organization does not exist'));

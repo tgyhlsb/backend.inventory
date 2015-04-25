@@ -50,7 +50,6 @@ exports.fetchDuplicates = function (req, res, next) {
     }
   }
   Entity.fetch(options, function (err, entities) {
-    console.log(entities);
     if (err) return next(err);
     if (entities && entities.length) {
       return next(utils.error(400, 'Entity \'' + data.name + '\' already exists'));
