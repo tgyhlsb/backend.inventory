@@ -46,13 +46,7 @@ OrganizationSchema.path('owner').validate(function (owner) {
  */
 
 OrganizationSchema.pre('save', function(next) {
-  if (!this.isNew) return next();
-
-  if (!validatePresenceOf(this.name)) {
-    next(utils.error(500, 'Invalid password'));
-  } else {
-    next();
-  }
+  next();
 });
 
 /**
