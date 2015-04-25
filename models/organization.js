@@ -124,6 +124,29 @@ OrganizationSchema.statics = {
     this.find(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+
+  /**
+   * Exists
+   *
+   * @param {Object} criteria
+   * @param {Function} cb
+   * @api public
+   */
+
+  exists: function (organizationId, cb) {
+    var options = {
+      select: 'name owner createdAt',
+      criteria: {
+        _id: organizationId
+      }
+    }
+    if (!utils.validateCriteria(options.criteria)) return cb(utils.error(400, 'Invalid id'));
+    this.find(options.criteria)
+      .select(options.select)
+      .exec(function (err, organizations) {
+        return cb(null, organizations && organizations.length);
+      });
   }
 }
 
