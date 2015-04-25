@@ -9,6 +9,10 @@ var utils = require('../lib/utils');
 
 var Schema = mongoose.Schema;
 
+// Models
+var Organization = mongoose.model('Organization');
+
+
 /**
  * Entity Schema
  */
@@ -100,7 +104,9 @@ EntitySchema.pre('save', function(next) {
   // var err = rolesError(this) || attributesError(this);
   // if (err) return next(utils.error(400, err));
 
-  next();
+  Organization.exists(this.organization, function(err, exists) {
+    return exists ? next() : next(utils.error(400, 'Organization does not exist'));
+  });
 });
 
 /**
