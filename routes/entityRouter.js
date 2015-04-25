@@ -22,6 +22,7 @@ router
   )
 .post('/',
   passport.authenticate('root', { session: false }),
+  entitiesCtrl.fetchDuplicates,
   entitiesCtrl.create,
   entitiesCtrl.showOne
   )
