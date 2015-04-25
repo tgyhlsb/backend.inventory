@@ -18,7 +18,7 @@ var cookies, count
  */
 
 describe('Users', function () {
-  describe('POST /users', function () {
+  describe('POST /root/users', function () {
     describe('Invalid parameters', function () {
       before(function (done) {
         var user = new User({
@@ -47,7 +47,7 @@ describe('Users', function () {
 
       it('no email - should respond with errors', function (done) {
         request(app)
-        .post('/users/')
+        .post('/root/users/')
         .set({
           'Content-Type': 'application/json',
           'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
@@ -68,7 +68,7 @@ describe('Users', function () {
 
       it('no username - should respond with errors', function (done) {
         request(app)
-        .post('/users/')
+        .post('/root/users/')
         .set({
           'Content-Type': 'application/json',
           'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
@@ -89,7 +89,7 @@ describe('Users', function () {
 
       it('no name - should respond with errors', function (done) {
         request(app)
-        .post('/users/')
+        .post('/root/users/')
         .set({
           'Content-Type': 'application/json',
           'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
@@ -126,7 +126,7 @@ describe('Users', function () {
 
       it('Respond with new user info', function (done) {
         request(app)
-        .post('/users/')
+        .post('/root/users/')
         .set({
           'Content-Type': 'application/json',
           'Authorization': 'Basic YWRtaW5AdGVzdC5jb206YWRtaW4='
