@@ -122,12 +122,6 @@ EntityTypeSchema.path('name').validate(function (name, fn) {
 
 EntityTypeSchema.pre('save', function(next) {
 
-  if (!this.isNew) return next();
-
-  if (!validatePresenceOf(this.name)) {
-    return next(utils.error(400, 'Invalid name'));
-  }
-
   var err = rolesError(this) || attributesError(this);
   if (err) return next(utils.error(400, err));
 
