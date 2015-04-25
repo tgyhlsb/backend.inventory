@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var utils = require('../lib/utils');
+var idValidator = require('mongoose-id-validator');
 
 var Schema = mongoose.Schema;
 
@@ -66,8 +67,8 @@ UserSchema.path('email').validate(function (email, fn) {
 
   // Check only when it is a new user or when email field is modified
   if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0);
+    User.count({ email: email }).exec(function (err, count) {
+      fn(!err && count === 0);
     });
   } else fn(true);
 }, 'Email already exists');
@@ -212,4 +213,5 @@ UserSchema.statics = {
   }
 }
 
+UserSchema.plugin(idValidator);
 mongoose.model('User', UserSchema);

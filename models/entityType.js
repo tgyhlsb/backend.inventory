@@ -6,6 +6,7 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var utils = require('../lib/utils');
+var idValidator = require('mongoose-id-validator');
 
 var Schema = mongoose.Schema;
 
@@ -75,9 +76,16 @@ EntityTypeSchema.path('name').validate(function (name) {
   return validatePresenceOf(name);
 }, 'Name cannot be blank');
 
-EntityTypeSchema.path('organization').validate(function (organization) {
-  return validatePresenceOf(organization);
-}, 'Organization cannot be null');
+EntityTypeSchema.path('name').validate(function (name, fn) {
+  var EntityType = mongoose.model('EntityType');
+
+  // Check only when it is a new entityType or when name field is modified
+  if (this.isNew || this.isModified('name')) {
+    EntityType.count({ name: name }).exec(function (err, count) {
+      fn(!err && count === 0);
+    });
+  } else fn(true);
+}, 'Name already exists');
 
 
 /**
@@ -174,4 +182,5 @@ EntityTypeSchema.statics = {
   }
 }
 
+EntityTypeSchema.plugin(idValidator);
 mongoose.model('EntityType', EntityTypeSchema);
