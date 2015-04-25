@@ -37,27 +37,6 @@ exports.fetch = function (req, res, next) {
 };
 
 /**
- * Fetch duplicates
- */
-
-exports.fetchDuplicates = function (req, res, next) {
-  var data = req.body.entityType || req.body;
-  var options = {
-    criteria: {
-      organization: data.organization,
-      name: data.name
-    }
-  };
-  EntityType.fetch(options, function (err, entityTypes) {
-    if (err) return next(err);
-    if (entityTypes && entityTypes.length) {
-      return next(utils.error(400, 'EntityType \'' + data.name + '\' already exists'));
-    }
-    next();
-  });
-};
-
-/**
  * Create
  */
 
