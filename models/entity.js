@@ -23,6 +23,11 @@ var EntitySchema = new Schema({
     type: String,
     required: true
   },
+  parent: {
+    type: Schema.ObjectId,
+    ref: 'Entity',
+    required: false
+  },
   organization: {
     type: Schema.ObjectId,
     ref: 'Organization',
@@ -62,7 +67,7 @@ EntitySchema.path('name').validate(function (name, fn) {
 
   // Check only when it is a new entity or when name field is modified
   if (this.isNew || this.isModified('name')) {
-    Entity.count({ name: name }).exec(function (err, count) {
+    Entity.count({ name: name, parent: this.parent }).exec(function (err, count) {
       fn(!err && count === 0);
     });
   } else fn(true);
@@ -74,13 +79,6 @@ EntitySchema.path('name').validate(function (name, fn) {
  */
 
 EntitySchema.pre('save', function(next) {
-
-  if (!this.isNew) return next();
-
-  if (!validatePresenceOf(this.name)) {
-    return next(utils.error(400, 'Invalid name'));
-  }
-
   next();
 });
 
