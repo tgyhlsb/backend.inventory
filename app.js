@@ -23,9 +23,13 @@ mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
 // Bootstrap models
-fs.readdirSync(__dirname + '/models').forEach(function (file) {
-  if (~file.indexOf('.js')) require(__dirname + '/models/' + file);
-});
+// fs.readdirSync(__dirname + '/models').forEach(function (file) {
+//   if (~file.indexOf('.js')) require(__dirname + '/models/' + file);
+// });
+require('./models/organization.js');
+require('./models/user.js');
+require('./models/entityType.js');
+require('./models/entity.js');
 
 // Bootstrap passport config
 require('./config/passport')(passport, config);
