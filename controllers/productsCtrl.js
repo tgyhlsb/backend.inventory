@@ -29,10 +29,10 @@ exports.select = function (req, res, next) {
 
 exports.fetch = function (req, res, next) {
   var options = req.body;
-  Product.fetch(options, function (err, entities) {
+  Product.fetch(options, function (err, products) {
     if (err) return next(err);
-    if (!entities) return next(utils.error(500, 'Failed to find entities'));
-    req.entities = entities;
+    if (!products) return next(utils.error(500, 'Failed to find products'));
+    req.products = products;
     next();
   });
 };
@@ -67,6 +67,6 @@ exports.showOne = function (req, res, next) {
  */
 
 exports.showAll = function (req, res) {
-  if (!req.entities) return next(utils.error(400, 'Entities can\'t be null'));
+  if (!req.entities) return next(utils.error(400, 'products can\'t be null'));
   res.status(200).json(req.entities);
 };
