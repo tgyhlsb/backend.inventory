@@ -63,10 +63,10 @@ exports.showOne = function (req, res, next) {
 };
 
 /**
- *  Show all entities
+ *  Show all products
  */
 
 exports.showAll = function (req, res) {
-  if (!req.entities) return next(utils.error(400, 'products can\'t be null'));
-  res.status(200).json(req.entities);
+  if (!req.products) return next(utils.error(400, 'products can\'t be null'));
+  res.status(200).json(req.products);
 };
