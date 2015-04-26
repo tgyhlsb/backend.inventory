@@ -10,10 +10,6 @@ var idValidator = require('mongoose-id-validator');
 
 var Schema = mongoose.Schema;
 
-// Models
-var Organization = mongoose.model('Organization');
-
-
 /**
  * Entity Schema
  */
